@@ -52,6 +52,12 @@ def gameover(screen: pg.Surface)   -> None:
     time.sleep(5) # 5秒間表示する
     return
 def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
+    """"
+    爆弾の画像と加速のリストを初期化する関数
+    引数：なし
+    戻り値：爆弾の大きさ変更画像のリストと段階的な加速のリスト
+    """
+
     bb_imgs=[]
     bb_accs=[a for a in range(1,11)]
     for r in range(1,11):
@@ -60,6 +66,11 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
         bb_imgs.append(bb_img)
     return bb_imgs, bb_accs
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
+    """"
+    こうかとんの画像を移動方向に応じて変えるための辞書を作成する関数
+    引数：なし 
+    戻り値：移動方向をキー、対応するこうかとんの画像を値とする辞書
+    """
     kk_dict = {
         (0, 0):pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1),
         (0, -5):pg.transform.rotozoom(pg.transform.flip(pg.image.load("fig/3.png"), True, False), 90, 1),
@@ -101,7 +112,9 @@ def main():
             gameover(screen)
             print("ゲームオーバー")
             return
-        screen.blit(bg_img, [0, 0]) 
+        screen.blit(bg_img, [0, 0]) #背景
+
+        #爆弾１の速度と画像の更新
         avx = vx * bb_accs[min(tmr//500, 9)] #爆弾の速度を加速させる
         avy = vy * bb_accs[min(tmr//500, 9)]
         bb_img = bb_imgs[min(tmr//500, 9)] #爆弾の画像を更新する
@@ -109,14 +122,6 @@ def main():
 
         key_lst = pg.key.get_pressed()
         sum_mv = [0, 0]
-        # if key_lst[pg.K_UP]:
-        #     sum_mv[1] -= 5
-        # if key_lst[pg.K_DOWN]:
-        #     sum_mv[1] += 5
-        # if key_lst[pg.K_LEFT]:
-        #     sum_mv[0] -= 5
-        # if key_lst[pg.K_RIGHT]:
-        #     sum_mv[0] += 5
         for key, mv in DELTA.items():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
@@ -125,10 +130,13 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])#動きをなかったことにする
         screen.blit(kk_img, kk_rct) 
+
+        #爆弾１の当たり判定と移動
         bb_rct.move_ip(avx, avy) #爆弾を移動させる
         bb_rct.width=bb_imgs[min(tmr//500, 9)].get_rect().width #爆弾の横サイズを更新 
         bb_rct.height=bb_imgs[min(tmr//500, 9)].get_rect().height #爆弾の縦サイズを更新
         kk_img = kk_dict.get(tuple(sum_mv), kk_dict[(0, 0)])
+
 
         yoko, tate = check_bound(bb_rct)
         if not yoko: #横方向にはみでているなら
