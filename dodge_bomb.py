@@ -42,7 +42,7 @@ def main():
             if key_lst[key]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
-                
+
         kk_rct.move_ip(sum_mv)
         screen.blit(kk_img, kk_rct)
         pg.display.update()
@@ -55,3 +55,4 @@ if __name__ == "__main__":
     main()
     pg.quit()
     sys.exit()
+
