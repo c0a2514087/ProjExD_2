@@ -62,15 +62,15 @@ def init_bb_imgs() -> tuple[list[pg.Surface], list[int]]:
 def get_kk_imgs() -> dict[tuple[int, int], pg.Surface]:
     kk_dict = {
         (0, 0):pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1),
-        (0, -5):pg.transform.rotozoom(pg.image.load("fig/3.png"), 270, 1),
-        (0, +5):pg.transform.rotozoom(pg.image.load("fig/3.png"), 90, 1),
+        (0, -5):pg.transform.rotozoom(pg.transform.flip(pg.image.load("fig/3.png"), True, False), 90, 1),
+        (0, +5):pg.transform.rotozoom(pg.transform.flip(pg.image.load("fig/3.png"), True, False), 270, 1),
         (-5, 0):pg.transform.rotozoom(pg.image.load("fig/3.png"), 0, 1),
-        (+5, 0):pg.transform.rotozoom(pg.image.load("fig/3.png"), 180, 1),
+        (+5, 0):pg.transform.flip(pg.image.load("fig/3.png"), True, False),
         (-5, -5):pg.transform.rotozoom(pg.image.load("fig/3.png"), 315, 1),
-        (+5, -5):pg.transform.rotozoom(pg.image.load("fig/3.png"), 225, 1),
+        (+5, -5):pg.transform.rotozoom(pg.transform.flip(pg.image.load("fig/3.png"), True, False), 45, 1),
         (-5, +5):pg.transform.rotozoom(pg.image.load("fig/3.png"), 45, 1),
-        (+5, +5):pg.transform.rotozoom(pg.image.load("fig/3.png"), 135, 1)
-        }  
+        (+5, +5):pg.transform.rotozoom(pg.transform.flip(pg.image.load("fig/3.png"), True, False), 305, 1)
+        }  #拡大と反転を組み合わせたいときは　pg.transform.rotozoom(pg.transform.flip(pg.image.load("fig/3.png"), True, False), 270, 1)　のようにする
     return kk_dict
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -93,6 +93,7 @@ def main():
     bb_imgs, bb_accs = init_bb_imgs()
     kk_dict = get_kk_imgs()
     while True:
+        
         for event in pg.event.get():
             if event.type == pg.QUIT: 
                 return
@@ -127,6 +128,7 @@ def main():
         bb_rct.move_ip(avx, avy) #爆弾を移動させる
         bb_rct.width=bb_imgs[min(tmr//500, 9)].get_rect().width #爆弾の横サイズを更新 
         bb_rct.height=bb_imgs[min(tmr//500, 9)].get_rect().height #爆弾の縦サイズを更新
+        kk_img = kk_dict.get(tuple(sum_mv), kk_dict[(0, 0)])
 
         yoko, tate = check_bound(bb_rct)
         if not yoko: #横方向にはみでているなら
