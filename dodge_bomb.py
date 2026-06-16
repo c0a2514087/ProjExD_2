@@ -137,7 +137,6 @@ def main():
         bb_rct.height=bb_imgs[min(tmr//500, 9)].get_rect().height #爆弾の縦サイズを更新
         kk_img = kk_dict.get(tuple(sum_mv), kk_dict[(0, 0)])
 
-
         yoko, tate = check_bound(bb_rct)
         if not yoko: #横方向にはみでているなら
             vx *= -1
